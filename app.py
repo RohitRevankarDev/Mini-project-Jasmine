@@ -124,9 +124,7 @@ numeric_columns = [
 ]
 
 for col in numeric_columns:
-
     if col in df.columns:
-
         df[col] = pd.to_numeric(
             df[col],
             errors="coerce"
@@ -134,7 +132,6 @@ for col in numeric_columns:
 
 
 if "VALUE" in events_df.columns:
-
     events_df["VALUE"] = pd.to_numeric(
         events_df["VALUE"],
         errors="coerce"
@@ -142,28 +139,25 @@ if "VALUE" in events_df.columns:
 
 
 # ============================================================
-# HEAVY RAIN THRESHOLD DEFINITION (> 25mm)
+# WEATHER EVENT FLAGS DEFINITION (For UI display)
 # ============================================================
 
+# To ensure the UI accurately identifies the stress conditions on any given day,
+# we apply the exact statistical thresholds validated in Phase 4 and Phase 6.
 if "RAINFALL_MM" in df.columns:
-    df["FLAG_HEAVY_RAIN"] = (df["RAINFALL_MM"] > 49.0).astype(int)
+    df["FLAG_HEAVY_RAIN"] = (df["RAINFALL_MM"] > 25.59).astype(int)
 
-    if "FLAG_HOT_DAY" in df.columns and "FLAG_HUMID_DAY" in df.columns:
-        df["FLAG_COMBINED_STRESS"] = (
-            (df["FLAG_HEAVY_RAIN"] == 1) |
-            (df["FLAG_HOT_DAY"] == 1) |
-            (df["FLAG_HUMID_DAY"] == 1)
-        ).astype(int)
+if "MAX_TEMP_C" in df.columns:
+    df["FLAG_HOT_DAY"] = (df["MAX_TEMP_C"] > 34.68).astype(int)
 
-if "RAINFALL_MM" in df.columns and "DATE" in df.columns and "EVENT_TYPE" in events_df.columns:
-    heavy_rain_days = df[df["RAINFALL_MM"] > 25.0][["DATE", "RAINFALL_MM"]].dropna().copy()
-    heavy_rain_days.rename(columns={"RAINFALL_MM": "VALUE"}, inplace=True)
-    heavy_rain_days["EVENT_TYPE"] = "HEAVY_RAIN"
+if "HUMIDITY_PERCENT" in df.columns:
+    df["FLAG_HUMID_DAY"] = (df["HUMIDITY_PERCENT"] > 83.41).astype(int)
 
-    events_df = pd.concat(
-        [events_df[events_df["EVENT_TYPE"] != "HEAVY_RAIN"], heavy_rain_days[["DATE", "EVENT_TYPE", "VALUE"]]],
-        ignore_index=True
-    ).sort_values("DATE").reset_index(drop=True)
+if "FLAG_HEAVY_RAIN" in df.columns and "FLAG_HOT_DAY" in df.columns and "FLAG_HUMID_DAY" in df.columns:
+    df["FLAG_COMBINED_STRESS"] = (
+        (df["FLAG_HEAVY_RAIN"] == 1) &
+        ((df["FLAG_HOT_DAY"] == 1) | (df["FLAG_HUMID_DAY"] == 1))
+    ).astype(int)
 
 
 # ============================================================
@@ -207,9 +201,7 @@ if page == "📊 Historical Explorer":
     )
 
     if len(valid_dates) == 0:
-
         st.warning("No valid dates found.")
-
         st.stop()
 
     selected_date = st.selectbox(
@@ -227,11 +219,9 @@ if page == "📊 Historical Explorer":
     ].copy()
 
     if selected_rows.empty:
-
         st.warning(
             "No data available for the selected date."
         )
-
         st.stop()
 
     row = selected_rows.iloc[0]
@@ -245,14 +235,11 @@ if page == "📊 Historical Explorer":
     price = row.get("PRICE_INR")
 
     if pd.notna(price):
-
         st.metric(
             "Jasmine Price",
             f"₹{price:.2f}"
         )
-
     else:
-
         st.metric(
             "Jasmine Price",
             "N/A"
@@ -277,17 +264,12 @@ if page == "📊 Historical Explorer":
     weather_data = {}
 
     for col in weather_columns:
-
         if col in df.columns:
-
             value = row.get(col)
-
             if pd.notna(value):
-
                 weather_data[col] = value
 
     if weather_data:
-
         weather_cols = st.columns(
             len(weather_data)
         )
@@ -295,7 +277,6 @@ if page == "📊 Historical Explorer":
         for i, (name, value) in enumerate(
             weather_data.items()
         ):
-
             display_name = {
                 "RAINFALL_MM": "Rainfall",
                 "MAX_TEMP_C": "Max Temperature",
@@ -316,9 +297,7 @@ if page == "📊 Historical Explorer":
                 display_name,
                 f"{value:.2f}{unit}"
             )
-
     else:
-
         st.info(
             "Weather information is not available "
             "for this date."
@@ -346,7 +325,6 @@ if page == "📊 Historical Explorer":
     ]
 
     if available_flags:
-
         flag_cols = st.columns(
             len(available_flags)
         )
@@ -354,7 +332,6 @@ if page == "📊 Historical Explorer":
         for i, flag in enumerate(
             available_flags
         ):
-
             value = pd.to_numeric(
                 row.get(flag),
                 errors="coerce"
@@ -368,13 +345,10 @@ if page == "📊 Historical Explorer":
             )
 
             if pd.notna(value) and value == 1:
-
                 flag_cols[i].success(
                     f"✓ {event_name}"
                 )
-
             else:
-
                 flag_cols[i].info(
                     f"— {event_name}"
                 )
@@ -402,7 +376,6 @@ if page == "📊 Historical Explorer":
     ].copy()
 
     if not history.empty:
-
         history_columns = [
             col
             for col in [
@@ -438,7 +411,7 @@ elif page == "🌧️ Weather Events":
 
     st.write(
         "Explore the weather events identified during "
-        "Phase 4 and used for weather–price signature analysis."
+        "Phase 4 and Phase 6, used for weather–price signature analysis."
     )
 
     st.divider()
@@ -460,11 +433,11 @@ elif page == "🌧️ Weather Events":
         "PROLONGED_RAIN": "Prolonged Rain",
         "EXTREME_HUMIDITY": "Extreme Humidity",
         "EXTREME_HEAT": "Extreme Heat",
-        "HEAVY_RAIN": "Heavy Rain"
+        "HEAVY_RAIN": "Heavy Rain",
+        "COMBINED_STRESS": "Combined Stress"
     }
 
     for event_type, count in event_counts.items():
-
         event_count_rows.append(
             {
                 "Weather Event":
@@ -489,7 +462,7 @@ elif page == "🌧️ Weather Events":
 
     st.caption(
         "Counts are taken directly from the validated "
-        "weather_events_database.csv (with Heavy Rain defined as rainfall > 25 mm)."
+        "weather_events_database.csv."
     )
 
     st.divider()
@@ -537,7 +510,6 @@ elif page == "🌧️ Weather Events":
     # --------------------------------------------------------
 
     if "DATE" in df.columns:
-
         price_columns = [
             col
             for col in [
@@ -561,9 +533,7 @@ elif page == "🌧️ Weather Events":
             on="DATE",
             how="left"
         )
-
     else:
-
         event_analysis = selected_events.copy()
 
     # --------------------------------------------------------
@@ -582,20 +552,16 @@ elif page == "🌧️ Weather Events":
     )
 
     if "PRICE_INR" in event_analysis.columns:
-
         event_prices = pd.to_numeric(
             event_analysis["PRICE_INR"],
             errors="coerce"
         ).dropna()
-
     else:
-
         event_prices = pd.Series(
             dtype="float64"
         )
 
     if not event_prices.empty:
-
         c2.metric(
             "Average Price",
             f"₹{event_prices.mean():.2f}"
@@ -610,9 +576,7 @@ elif page == "🌧️ Weather Events":
             "Maximum Price",
             f"₹{event_prices.max():.2f}"
         )
-
     else:
-
         c2.metric(
             "Average Price",
             "N/A"
@@ -639,7 +603,6 @@ elif page == "🌧️ Weather Events":
     )
 
     if "VALUE" in selected_events.columns:
-
         value_data = selected_events[
             [
                 "DATE",
@@ -701,14 +664,12 @@ elif page == "🌧️ Weather Events":
     ].copy()
 
     if "DATE" in event_display.columns:
-
         event_display["DATE"] = (
             event_display["DATE"]
             .dt.strftime("%Y-%m-%d")
         )
 
     if "EVENT_TYPE" in event_display.columns:
-
         event_display["EVENT_TYPE"] = (
             event_display["EVENT_TYPE"]
             .map(
@@ -751,11 +712,9 @@ elif page == "🤖 Phase 7 Prediction":
     )
 
     if len(prediction_dates) == 0:
-
         st.warning(
             "No prediction dates found."
         )
-
         st.stop()
 
     selected_prediction_date = st.selectbox(
@@ -773,11 +732,9 @@ elif page == "🤖 Phase 7 Prediction":
     ].copy()
 
     if selected_prediction.empty:
-
         st.warning(
             "No prediction available for this date."
         )
-
         st.stop()
 
     prediction_row = selected_prediction.iloc[0]
@@ -886,7 +843,7 @@ elif page == "📈 Model Evaluation":
                 "Type": "Simple Baseline",
                 "Algorithm": "Linear Regression",
                 "Features": "Yesterday Price",
-                "MAE": 107.48,
+                "MAE": 107.49,
                 "RMSE": 141.55,
                 "R²": 0.6232
             },
@@ -895,36 +852,36 @@ elif page == "📈 Model Evaluation":
                 "Type": "Price-Only ML",
                 "Algorithm": "Random Forest",
                 "Features": "Recent Price Features",
-                "MAE": 113.53,
-                "RMSE": 150.36,
-                "R²": 0.5748
+                "MAE": 112.76,
+                "RMSE": 149.69,
+                "R²": 0.5786
             },
             {
                 "Model": "Model B",
                 "Type": "Price-Only ML",
                 "Algorithm": "XGBoost",
                 "Features": "Recent Price Features",
-                "MAE": 111.17,
-                "RMSE": 145.56,
-                "R²": 0.6016
+                "MAE": 111.18,
+                "RMSE": 145.93,
+                "R²": 0.5995
             },
             {
                 "Model": "Model C",
                 "Type": "Weather-Aware ML",
                 "Algorithm": "Random Forest",
                 "Features": "Price + Weather Features",
-                "MAE": 116.10,
-                "RMSE": 149.10,
-                "R²": 0.5819
+                "MAE": 114.62,
+                "RMSE": 147.25,
+                "R²": 0.5923
             },
             {
                 "Model": "Model C",
                 "Type": "Weather-Aware ML",
                 "Algorithm": "XGBoost",
                 "Features": "Price + Weather Features",
-                "MAE": 114.67,
-                "RMSE": 148.39,
-                "R²": 0.5859
+                "MAE": 114.69,
+                "RMSE": 148.49,
+                "R²": 0.5854
             }
         ]
     )
@@ -952,40 +909,31 @@ elif page == "📈 Model Evaluation":
     metric_cols = st.columns(3)
 
     with metric_cols[0]:
-
         st.markdown("### MAE")
-
         st.write(
             "Mean Absolute Error represents the average "
             "absolute prediction error in rupees."
         )
-
         st.caption(
             "Lower MAE generally indicates smaller average errors."
         )
 
     with metric_cols[1]:
-
         st.markdown("### RMSE")
-
         st.write(
             "Root Mean Squared Error gives greater weight "
             "to larger prediction errors."
         )
-
         st.caption(
             "Lower RMSE generally indicates fewer large errors."
         )
 
     with metric_cols[2]:
-
         st.markdown("### R²")
-
         st.write(
             "R² indicates how much of the variation in Jasmine "
             "price is explained by the model."
         )
-
         st.caption(
             "Higher R² generally indicates more explained variation."
         )
@@ -1004,15 +952,15 @@ elif page == "📈 Model Evaluation":
         [
             {
                 "Algorithm": "Random Forest",
-                "Price-Only MAE": 113.53,
-                "Weather-Aware MAE": 116.10,
-                "MAE Change": "+2.26%"
+                "Price-Only MAE": 112.76,
+                "Weather-Aware MAE": 114.62,
+                "MAE Change": "-1.65%"
             },
             {
                 "Algorithm": "XGBoost",
-                "Price-Only MAE": 111.17,
-                "Weather-Aware MAE": 114.67,
-                "MAE Change": "+3.15%"
+                "Price-Only MAE": 111.18,
+                "Weather-Aware MAE": 114.69,
+                "MAE Change": "-3.16%"
             }
         ]
     )
@@ -1026,7 +974,7 @@ elif page == "📈 Model Evaluation":
     st.info(
         """
         In this experiment, adding the tested weather features
-        increased MAE for both Random Forest and XGBoost.
+        increased MAE for both Random Forest and XGBoost (indicated by the negative change).
 
         Therefore, the tested weather features did not improve
         overall prediction accuracy compared with the corresponding
@@ -1105,4 +1053,3 @@ st.sidebar.caption(
 st.sidebar.caption(
     "Phase 1–7 Project Demo"
 )
-
