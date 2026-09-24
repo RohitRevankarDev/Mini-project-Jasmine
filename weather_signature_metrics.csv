@@ -1,0 +1,5 @@
+EVENT_TYPE,PEAK_IMPACT_%,PEAK_TIMING,RECOVERY_TIMING
+EXTREME_HEAT,20.73,Day +1,No Recovery in Window
+EXTREME_HUMIDITY,43.66,Day +7,No Recovery in Window
+PROLONGED_RAIN,36.91,Day +7,No Recovery in Window
+HEAVY_RAIN,49.43,Day +7,No Recovery in Window
