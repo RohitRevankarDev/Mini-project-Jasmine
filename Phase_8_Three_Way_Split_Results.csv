@@ -1,0 +1,6 @@
+Model,Val_MAE (₹),Val_RMSE (₹),Val_R2,Test_2016_MAE (₹),Test_2016_RMSE (₹),Test_2016_R2
+Model A - Baseline (LR),99.43,136.64,0.6204,105.7,136.67,0.6612
+Model B - Price Only (RF),103.58,144.36,0.5762,107.49,143.47,0.6266
+Model B - Price Only (XGB),104.82,159.5,0.4827,105.61,140.2,0.6435
+Model C - Weather Aware (RF),100.82,138.4,0.6105,109.44,142.95,0.6294
+Model C - Weather Aware (XGB),101.02,150.64,0.5386,107.37,139.33,0.6479

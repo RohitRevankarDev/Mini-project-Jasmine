@@ -1,0 +1,3 @@
+Market_Regime,Day_Count,Actual_Mean_Price (₹),Model_A_MAE (₹),Model_B_Price_XGB_MAE (₹),Model_C_Weather_XGB_MAE (₹)
+Normal Trading Days,259,495.14,119.01,121.27,126.99
+Weather Stress Event Days,251,411.43,95.59,100.74,101.96

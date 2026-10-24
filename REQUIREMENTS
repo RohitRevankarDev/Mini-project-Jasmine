@@ -1,0 +1,1 @@
+pip install pandas matplotlib numpy scikit-learn xgboost python-calamine xlrd

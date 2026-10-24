@@ -1,0 +1,7 @@
+Feature_Group,Num_Features,Val_MAE (₹),Val_RMSE (₹),Test_2016_MAE (₹),Test_2016_RMSE (₹),Test_2016_R2
+0. Price-Only Baseline (XGB),6,104.82,159.5,105.61,140.2,0.6435
+1. Price + Lagged Weather (t-1),9,100.9,150.61,105.0,137.38,0.6577
+2. Price + Accumulated Rain (3D & 7D),8,105.74,157.85,109.89,142.92,0.6295
+3. Price + Consecutive Rain Streak,7,104.72,158.48,111.79,146.2,0.6123
+4. Price + Extreme Stress Flags,9,103.92,157.48,106.04,139.72,0.6459
+5. Price + All Weather Features,15,101.02,150.64,107.37,139.33,0.6479

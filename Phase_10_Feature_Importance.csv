@@ -1,0 +1,16 @@
+Feature,Category,XGB_Gain_Importance (%),Permutation_MAE_Impact (₹)
+FLAG_HEAVY_RAIN,Weather Signal,0.0,0.0
+FLAG_HUMID_DAY,Weather Signal,0.0,0.0
+FLAG_HOT_DAY,Weather Signal,0.14,-0.0
+PRICE_LAG_7,Price History,2.16,-1.23
+RAIN_LAG_1,Weather Signal,2.27,-0.11
+CONSEC_RAIN_DAYS_LAG1,Weather Signal,2.31,-3.32
+RAIN_3D_SUM,Weather Signal,2.62,1.63
+RAIN_7D_SUM,Weather Signal,2.8,3.31
+HUMIDITY_LAG_1,Weather Signal,3.12,0.65
+PRICE_3D_MEAN,Price History,3.43,0.46
+PRICE_LAG_3,Price History,3.43,8.33
+MAX_TEMP_LAG_1,Weather Signal,3.89,6.18
+PRICE_7D_MEAN,Price History,4.36,7.05
+PRICE_LAG_2,Price History,9.71,7.2
+PRICE_LAG_1,Price History,59.78,86.31
