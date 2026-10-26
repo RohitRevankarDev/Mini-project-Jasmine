@@ -1,6 +1,6 @@
-Model,Val_MAE (₹),Val_RMSE (₹),Val_R2,Test_2016_MAE (₹),Test_2016_RMSE (₹),Test_2016_R2
-Model A - Baseline (LR),99.43,136.64,0.6204,105.7,136.67,0.6612
-Model B - Price Only (RF),103.58,144.36,0.5762,107.49,143.47,0.6266
-Model B - Price Only (XGB),104.82,159.5,0.4827,105.61,140.2,0.6435
-Model C - Weather Aware (RF),100.82,138.4,0.6105,109.44,142.95,0.6294
-Model C - Weather Aware (XGB),101.02,150.64,0.5386,107.37,139.33,0.6479
+Model,Val_MAE (₹),Val_RMSE (₹),Val_R2,Test_2023_2025_MAE (₹),Test_2023_2025_RMSE (₹),Test_2023_2025_R2
+Model A - Baseline (LR),177.81,253.66,0.7176,214.82,310.67,0.6483
+Model B - Price Only (RF),198.67,297.89,0.6105,255.45,386.62,0.4554
+Model B - Price Only (XGB),190.68,287.14,0.6381,247.43,374.42,0.4892
+Model C - Weather Aware (RF),205.75,310.63,0.5765,255.57,393.63,0.4355
+Model C - Weather Aware (XGB),212.21,324.87,0.5368,262.98,405.75,0.4001

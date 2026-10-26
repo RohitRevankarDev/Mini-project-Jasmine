@@ -1,6 +1,6 @@
 EVENT_TYPE,HISTORICAL_EVENTS,RESPONSE_START,PEAK_IMPACT_%,PEAK_TIMING,RECOVERY_TIMING
-HEAVY_RAIN,355,Day +0,49.43,Day +7,No Recovery in Window
-PROLONGED_RAIN,972,Day +0,36.91,Day +7,No Recovery in Window
-EXTREME_HEAT,51,Day +0,20.73,Day +1,No Recovery in Window
-EXTREME_HUMIDITY,1019,Day +0,43.66,Day +7,No Recovery in Window
-COMBINED_STRESS,258,Day +0,53.46,Day +6,No Recovery in Window
+HEAVY_RAIN,278,Day +1,10.17,Day +6,No Recovery in Window
+PROLONGED_RAIN,210,Day +1,12.7,Day +4,No Recovery in Window
+EXTREME_HEAT,114,Day +0,48.95,Day +7,No Recovery in Window
+EXTREME_HUMIDITY,2335,Day +0,37.44,Day +7,No Recovery in Window
+COMBINED_STRESS,206,Day +2,11.29,Day +6,No Recovery in Window

@@ -1,5 +1,5 @@
 Classifier,Accuracy (%),Precision (%),Recall (%),F1_Score (%),ROC_AUC
-Price-Only Classifier (RF),76.67,60.66,78.05,68.27,0.8218
-Weather-Aware Classifier (RF),75.69,61.63,64.63,63.1,0.8156
-Price-Only Classifier (XGB),79.22,67.9,67.07,67.48,0.8437
-Weather-Aware Classifier (XGB),77.25,70.34,50.61,58.87,0.8383
+Price-Only Classifier (RF),71.06,59.8,58.37,59.08,0.7677
+Weather-Aware Classifier (RF),70.21,60.12,49.76,54.45,0.746
+Price-Only Classifier (XGB),72.69,66.02,48.8,56.12,0.7784
+Weather-Aware Classifier (XGB),71.32,64.66,43.78,52.21,0.7659
